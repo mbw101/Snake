@@ -14,8 +14,13 @@ namespace Snake
     public partial class GameScreen : UserControl
     {
         SolidBrush sb = new SolidBrush(Color.White);
+        Font textFont;
         List<SnakeComponent> snake = new List<SnakeComponent>();
-        const int snakeSpeed = 7;
+        const int SNAKE_SPEED = 7;
+        const int MAX_PARTS = 20;
+        const int MARGIN = 3;
+        const int PART_SIZE = 16;
+        int score = 0;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         bool moveUp = false;
         bool moveLeft = false;
@@ -29,9 +34,13 @@ namespace Snake
 
         public void OnStart()
         {
+            // create text graphics
+            textFont = new Font("Verdana", 14, FontStyle.Regular);
             // make one snake part
-            SnakeComponent sc = new SnakeComponent(25, 25, 20, snakeSpeed, 0);
+            SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
             snake.Add(sc);
+            SnakeComponent sc2 = new SnakeComponent(sc.rect.X - sc.rect.Width - MARGIN, sc.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
+            snake.Add(sc2);
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -48,22 +57,33 @@ namespace Snake
                 // TODO: Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
                 if (upArrowDown)
                 {
-                    sc.ySpeed = -snakeSpeed;
-                    sc.xSpeed = 0;
+                    if (sc == snake[0])
+                    {
+                        sc.ySpeed = -SNAKE_SPEED;
+                        sc.xSpeed = 0;
+                    }
+                    else
+                    {
+                        if (sc.rect.Y == snake[0].rect.Y)
+                        {
+                            sc.ySpeed = -SNAKE_SPEED;
+                            sc.xSpeed = 0;
+                        }
+                    }
                 }
                 else if (downArrowDown)
                 {
-                    sc.ySpeed = snakeSpeed;
+                    sc.ySpeed = SNAKE_SPEED;
                     sc.xSpeed = 0;
                 }
                 else if (leftArrowDown)
                 {
-                    sc.xSpeed = -snakeSpeed;
+                    sc.xSpeed = -SNAKE_SPEED;
                     sc.ySpeed = 0;
                 }
                 else if (rightArrowDown)
                 {
-                    sc.xSpeed = snakeSpeed;
+                    sc.xSpeed = SNAKE_SPEED;
                     sc.ySpeed = 0;
                 }
             }
@@ -71,6 +91,9 @@ namespace Snake
             #endregion
 
             #region Collision
+
+            // TODO: Add part to snake if collides with food
+
             if (snake[0].Collision(this.FindForm()))
             {
                 gameTimer.Stop();
@@ -82,6 +105,8 @@ namespace Snake
 
             #endregion
 
+            
+
             Refresh();
         }
 
@@ -91,6 +116,8 @@ namespace Snake
             {
                 e.Graphics.FillRectangle(sb, sc.rect);
             }
+
+            e.Graphics.DrawString("Score: " + score, textFont, sb, 25, 25);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
