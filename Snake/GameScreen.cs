@@ -21,6 +21,7 @@ namespace Snake
         const int MARGIN = 3;
         const int PART_SIZE = 16;
         int score = 0;
+        int nx, ny;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         bool moveUp = false;
         bool moveLeft = false;
@@ -36,19 +37,66 @@ namespace Snake
         {
             // create text graphics
             textFont = new Font("Verdana", 14, FontStyle.Regular);
-            // make one snake part
+
+            // make snake parts
             SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
             snake.Add(sc);
             SnakeComponent sc2 = new SnakeComponent(sc.rect.X - sc.rect.Width - MARGIN, sc.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
             snake.Add(sc2);
+            //SnakeComponent sc3 = new SnakeComponent(sc2.rect.X - sc2.rect.Width - MARGIN, sc2.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
+            //snake.Add(sc3);
+        }
+
+        public void moveSnake()
+        {
+            int tmpX = 0;
+            int tmpY = 0;
+            int velocityX = 0;
+            int velocityY = 0;
+
+            foreach (SnakeComponent sc in snake)
+            {
+                // head part
+                if (sc == snake[0])
+                {
+                    // save 
+                    tmpX = sc.rect.X;
+                    tmpY = sc.rect.Y;
+                    velocityX = sc.xSpeed;
+                    velocityY = sc.ySpeed;
+
+                    sc.Move();
+                }
+                else
+                {
+                    if (velocityX == SNAKE_SPEED)
+                    {
+                        // the head is moving right
+                        sc.Move(tmpX - PART_SIZE - MARGIN, tmpY);
+                    }
+                    else if (velocityX == -SNAKE_SPEED)
+                    {
+                        sc.Move(tmpX + PART_SIZE + MARGIN, tmpY);
+                    }
+                    else if (velocityY == SNAKE_SPEED)
+                    {
+                        sc.Move(tmpX, tmpY - MARGIN - PART_SIZE);
+                    }
+                    else if (velocityY == -SNAKE_SPEED)
+                    {
+                        sc.Move(tmpX, tmpY + MARGIN + PART_SIZE);
+                    }
+                }
+            }
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            foreach (SnakeComponent sc in snake)
-            {
-                sc.Move();
-            }
+            moveSnake();
+            //foreach (SnakeComponent sc in snake)
+            //{
+            //    sc.Move();
+            //}
 
             #region movement controls
 
@@ -57,34 +105,39 @@ namespace Snake
                 // TODO: Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
                 if (upArrowDown)
                 {
-                    if (sc == snake[0])
+                    // only allow the snake to move up if it isn't moving down
+                    if (sc.ySpeed != SNAKE_SPEED)
                     {
                         sc.ySpeed = -SNAKE_SPEED;
                         sc.xSpeed = 0;
                     }
-                    else
-                    {
-                        if (sc.rect.Y == snake[0].rect.Y)
-                        {
-                            sc.ySpeed = -SNAKE_SPEED;
-                            sc.xSpeed = 0;
-                        }
-                    }
                 }
                 else if (downArrowDown)
                 {
-                    sc.ySpeed = SNAKE_SPEED;
-                    sc.xSpeed = 0;
+                    // only allow the snake to move down if it isn't moving up
+                    if (sc.ySpeed != -SNAKE_SPEED)
+                    {
+                        sc.ySpeed = SNAKE_SPEED;
+                        sc.xSpeed = 0;
+                    }                  
                 }
                 else if (leftArrowDown)
                 {
-                    sc.xSpeed = -SNAKE_SPEED;
-                    sc.ySpeed = 0;
+                    // only allow snake to move left if it isn't moving right
+                    if (sc.xSpeed != SNAKE_SPEED)
+                    {
+                        sc.xSpeed = -SNAKE_SPEED;
+                        sc.ySpeed = 0;
+                    }
                 }
                 else if (rightArrowDown)
                 {
-                    sc.xSpeed = SNAKE_SPEED;
-                    sc.ySpeed = 0;
+                    // only allow snake to move right if it isn't moving left
+                    if (sc.xSpeed != -SNAKE_SPEED)
+                    {
+                        sc.xSpeed = SNAKE_SPEED;
+                        sc.ySpeed = 0;
+                    }
                 }
             }
 

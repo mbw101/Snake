@@ -48,5 +48,11 @@ namespace Snake
             rect.X += xSpeed;
             rect.Y += ySpeed;
         }
+
+        public void Move(int x, int y)
+        {
+            rect.X = x;
+            rect.Y = y;
+        }
     }
 }
