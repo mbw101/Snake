@@ -38,15 +38,22 @@ namespace Snake
             return false;
         }
 
-        public void Collision()
+        // TODO: Finish collision with food
+        public bool Collision(Food f)
         {
+            if (rect.IntersectsWith(f.rect))
+            {
+                return true;
+            }
 
+            return false;
         }
 
         public void Move()
         {
             rect.X += xSpeed;
             rect.Y += ySpeed;
+
         }
 
         public void Move(int x, int y)
