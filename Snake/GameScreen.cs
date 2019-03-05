@@ -84,14 +84,18 @@ namespace Snake
                 snake[i].rect.Y = snake[i - 1].rect.Y;
             }
 
-            // move the one after the head to the old head's position
-            snake[1].rect.X = tmpX;
-            snake[1].rect.Y = tmpY;
+            // only check if the snake has a head and tail
+            if (snake.Count >= 2)
+            {
+                // move the one after the head to the old head's position
+                snake[1].rect.X = tmpX;
+                snake[1].rect.Y = tmpY;
+            }
         }
 
         public void makeFood()
         {
-            f = new Food(random.Next(0, 800 - PART_SIZE), random.Next(0, PART_SIZE), PART_SIZE);
+            f = new Food(random.Next(0, 800 - PART_SIZE), random.Next(0, 600 - PART_SIZE), PART_SIZE);
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -162,9 +166,10 @@ namespace Snake
                 score++;
                 // make new food
                 makeFood();
+
                 // TODO: add body part
-                //SnakeComponent sc = new SnakeComponent(snake[snake.Count() - 1].rectX , 65, PART_SIZE, SNAKE_SPEED, 0);
-                //snake.Add(sc);
+                SnakeComponent sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, SNAKE_SPEED, 0);
+                snake.Add(sc);
             }
             
             #endregion       
