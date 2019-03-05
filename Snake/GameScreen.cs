@@ -22,7 +22,7 @@ namespace Snake
         const int MAX_PARTS = 20;
         const int MARGIN = 3;
         const int PART_SIZE = 16;
-        int score = 0;
+        public static int score = 0;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
 
         public GameScreen()
@@ -34,30 +34,15 @@ namespace Snake
 
         public void OnStart()
         {
+            // reset score
+            score = 0;
+
             // create text graphics
             textFont = new Font("Verdana", 14, FontStyle.Regular);
 
             // make snake parts
             SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
             snake.Add(sc);
-            //SnakeComponent sc2 = new SnakeComponent(sc.rect.X - sc.rect.Width, sc.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc2);
-            //SnakeComponent sc3 = new SnakeComponent(sc2.rect.X - sc2.rect.Width, sc2.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc3);
-            //SnakeComponent sc4 = new SnakeComponent(sc3.rect.X - sc3.rect.Width, sc3.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc4);
-            //SnakeComponent sc5 = new SnakeComponent(sc4.rect.X - sc4.rect.Width, sc4.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc5);
-            //SnakeComponent sc6 = new SnakeComponent(sc5.rect.X - sc5.rect.Width, sc5.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc6);
-            //SnakeComponent sc7 = new SnakeComponent(sc6.rect.X - sc6.rect.Width, sc6.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc7);
-            //SnakeComponent sc8 = new SnakeComponent(sc7.rect.X - sc7.rect.Width, sc7.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc8);
-            //SnakeComponent sc9 = new SnakeComponent(sc8.rect.X - sc8.rect.Width, sc8.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc9);
-            //SnakeComponent sc10 = new SnakeComponent(sc9.rect.X - sc9.rect.Width, sc9.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            //snake.Add(sc10);
 
             makeFood();
         }
@@ -66,8 +51,6 @@ namespace Snake
         {
             int tmpX = snake[0].rect.X;
             int tmpY = snake[0].rect.Y;
-            int velocityX = 0;
-            int velocityY = 0;
 
             // go from the back to the front 
             // and up the back body part
@@ -95,7 +78,10 @@ namespace Snake
 
         public void makeFood()
         {
-            f = new Food(random.Next(0, 800 - PART_SIZE), random.Next(0, 600 - PART_SIZE), PART_SIZE);
+            f = new Food(random.Next(0, this.Width - (PART_SIZE *  2)), random.Next(0, this.Height - (PART_SIZE * 2)), PART_SIZE);
+            
+
+            // TODO: Make food not generate on top of any snake body parts
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -106,7 +92,7 @@ namespace Snake
 
             foreach (SnakeComponent sc in snake)
             {
-                // TODO: Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
+                // \Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
                 if (upArrowDown)
                 {
                     // only allow the snake to move up if it isn't moving down
@@ -149,8 +135,6 @@ namespace Snake
 
             #region Collision
 
-            // TODO: Add part to snake if collides with food
-
             if (snake[0].Collision(this.FindForm()))
             {
                 gameTimer.Stop();
@@ -158,18 +142,47 @@ namespace Snake
                 Thread.Sleep(2000);
 
                 // TODO: Remove game screen and add lose screen
+                Form f = this.FindForm();
+                f.Controls.Remove(this);
+
+                LoseScreen ls = new LoseScreen();
+                f.Controls.Add(ls);
             }
+
             // when the head collides with food
             if (snake[0].Collision(f))
             {
                 // increase score
                 score++;
+
                 // make new food
                 makeFood();
 
                 // TODO: add body part
-                SnakeComponent sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-                snake.Add(sc);
+                int xSpeed = snake[snake.Count() - 1].xSpeed;
+                int ySpeed = snake[snake.Count() - 1].ySpeed;
+                SnakeComponent sc;
+
+                if (xSpeed == SNAKE_SPEED)
+                {
+                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
+                    snake.Add(sc);
+                }
+                else if (xSpeed == -SNAKE_SPEED)
+                {
+                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
+                    snake.Add(sc);
+                }
+                else if (ySpeed == SNAKE_SPEED)
+                {
+                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                    snake.Add(sc);
+                }
+                else if (ySpeed == -SNAKE_SPEED)
+                {
+                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                    snake.Add(sc);
+                }    
             }
             
             #endregion       

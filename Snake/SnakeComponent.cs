@@ -22,6 +22,7 @@ namespace Snake
             ySpeed = _ySpeed;
         }
 
+        // collision with the form
         public bool Collision(Form f)
         {
             if (rect.X < 0 || rect.X > f.Width - rect.Width)
@@ -32,13 +33,12 @@ namespace Snake
             if (rect.Y < 0 || rect.Y > f.Height - rect.Height)
             {
                 return true;
-
             }
 
             return false;
         }
 
-        // TODO: Finish collision with food
+        // Collision with food
         public bool Collision(Food f)
         {
             if (rect.IntersectsWith(f.rect))
@@ -49,13 +49,14 @@ namespace Snake
             return false;
         }
 
+        // move the snake body part with its x and y speeds
         public void Move()
         {
             rect.X += xSpeed;
             rect.Y += ySpeed;
-
         }
 
+        // move the body part to that position
         public void Move(int x, int y)
         {
             rect.X = x;
