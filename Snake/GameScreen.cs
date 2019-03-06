@@ -21,7 +21,8 @@ namespace Snake
         const int SNAKE_SPEED = 7;
         const int MAX_PARTS = 20;
         const int MARGIN = 3;
-        const int PART_SIZE = 16;
+        const int PART_SIZE = 32;
+        const int FOOD_SIZE = 16;
         public static int score = 0;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
 
@@ -29,7 +30,7 @@ namespace Snake
         {
             InitializeComponent();
 
-            OnStart();         
+            OnStart();
         }
 
         public void OnStart()
@@ -47,6 +48,20 @@ namespace Snake
             makeFood();
         }
 
+        public void StopGame()
+        {
+            gameTimer.Stop();
+
+            Thread.Sleep(2000);
+
+            // Remove game screen and add lose screen
+            Form f = this.FindForm();
+            f.Controls.Remove(this);
+
+            LoseScreen ls = new LoseScreen();
+            f.Controls.Add(ls);
+        }
+
         public void moveSnake()
         {
             int tmpX = snake[0].rect.X;
@@ -61,7 +76,7 @@ namespace Snake
             snake[0].Move();
 
             // start from the back and move up list
-            for (int i = snake.Count() - 1; i > 1 ; i--)
+            for (int i = snake.Count() - 1; i > 1; i--)
             {
                 snake[i].rect.X = snake[i - 1].rect.X;
                 snake[i].rect.Y = snake[i - 1].rect.Y;
@@ -78,8 +93,9 @@ namespace Snake
 
         public void makeFood()
         {
-            f = new Food(random.Next(0, this.Width - (PART_SIZE *  2)), random.Next(0, this.Height - (PART_SIZE * 2)), PART_SIZE);
-            
+            //random.Next(0, 700)
+            f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE);
+
 
             // TODO: Make food not generate on top of any snake body parts
         }
@@ -92,7 +108,7 @@ namespace Snake
 
             foreach (SnakeComponent sc in snake)
             {
-                // \Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
+                // Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
                 if (upArrowDown)
                 {
                     // only allow the snake to move up if it isn't moving down
@@ -109,7 +125,7 @@ namespace Snake
                     {
                         sc.ySpeed = SNAKE_SPEED;
                         sc.xSpeed = 0;
-                    }                  
+                    }
                 }
                 else if (leftArrowDown)
                 {
@@ -135,18 +151,10 @@ namespace Snake
 
             #region Collision
 
+            // check collision with window
             if (snake[0].Collision(this.FindForm()))
             {
-                gameTimer.Stop();
-
-                Thread.Sleep(2000);
-
-                // TODO: Remove game screen and add lose screen
-                Form f = this.FindForm();
-                f.Controls.Remove(this);
-
-                LoseScreen ls = new LoseScreen();
-                f.Controls.Add(ls);
+                StopGame();
             }
 
             // when the head collides with food
@@ -158,34 +166,59 @@ namespace Snake
                 // make new food
                 makeFood();
 
-                // TODO: add body part
+                // add at least 3 body parts
                 int xSpeed = snake[snake.Count() - 1].xSpeed;
                 int ySpeed = snake[snake.Count() - 1].ySpeed;
                 SnakeComponent sc;
 
+
                 if (xSpeed == SNAKE_SPEED)
                 {
-                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
-                    snake.Add(sc);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
+                        snake.Add(sc);
+                    }
                 }
                 else if (xSpeed == -SNAKE_SPEED)
                 {
-                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
-                    snake.Add(sc);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
+                        snake.Add(sc);
+                    }
                 }
                 else if (ySpeed == SNAKE_SPEED)
                 {
-                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
-                    snake.Add(sc);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                        snake.Add(sc);
+                    }
                 }
                 else if (ySpeed == -SNAKE_SPEED)
                 {
-                    sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
-                    snake.Add(sc);
-                }    
+                    for (int i = 0; i < 6; i++)
+                    {
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                        snake.Add(sc);
+                    }
+                }
             }
-            
-            #endregion       
+
+            // TODO: Check head collision with the rest of the snake body
+            //if (snake.Count() > 1)
+            //{
+            //    foreach (SnakeComponent sc in snake)
+            //    {
+            //        if (snake[0].Collision(sc))
+            //        {
+            //            // end game
+            //            StopGame();
+            //        }
+            //    }
+            //}
+            #endregion
 
             Refresh();
         }
@@ -198,7 +231,7 @@ namespace Snake
             {
                 e.Graphics.FillRectangle(sb, sc.rect);
             }
-           
+
             e.Graphics.DrawString("Score: " + score, textFont, sb, 25, 25);
         }
 
@@ -207,18 +240,22 @@ namespace Snake
             switch (e.KeyCode)
             {
                 case Keys.Left:
+                case Keys.A:
                     leftArrowDown = true;
                     break;
 
                 case Keys.Right:
+                case Keys.D:
                     rightArrowDown = true;
                     break;
 
                 case Keys.Up:
+                case Keys.W:
                     upArrowDown = true;
                     break;
 
                 case Keys.Down:
+                case Keys.S:
                     downArrowDown = true;
                     break;
             }
@@ -229,18 +266,22 @@ namespace Snake
             switch (e.KeyCode)
             {
                 case Keys.Left:
+                case Keys.A:
                     leftArrowDown = false;
                     break;
 
                 case Keys.Right:
+                case Keys.D:
                     rightArrowDown = false;
                     break;
 
                 case Keys.Up:
+                case Keys.W:
                     upArrowDown = false;
                     break;
 
                 case Keys.Down:
+                case Keys.S:
                     downArrowDown = false;
                     break;
             }

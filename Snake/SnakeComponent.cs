@@ -49,6 +49,16 @@ namespace Snake
             return false;
         }
 
+        // TODO: Collision with a snake body part with the head
+        public bool Collision(SnakeComponent sc)
+        {
+            if (rect.IntersectsWith(sc.rect))
+            {
+                return true;
+            }
+            return false;
+        }
+
         // move the snake body part with its x and y speeds
         public void Move()
         {
