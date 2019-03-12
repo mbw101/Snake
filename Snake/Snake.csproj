@@ -65,9 +65,21 @@
     <Compile Include="LoseScreen.Designer.cs">
       <DependentUpon>LoseScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="PauseMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PauseMenu.Designer.cs">
+      <DependentUpon>PauseMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnakeComponent.cs" />
+    <Compile Include="StartMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StartMenu.Designer.cs">
+      <DependentUpon>StartMenu.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -76,6 +88,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoseScreen.resx">
       <DependentUpon>LoseScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PauseMenu.resx">
+      <DependentUpon>PauseMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -86,6 +101,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="StartMenu.resx">
+      <DependentUpon>StartMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

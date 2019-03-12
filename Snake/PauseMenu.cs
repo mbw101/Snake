@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace Snake
 {
-    public partial class Form1 : Form
+    public partial class PauseMenu : UserControl
     {
-        public static int score = 0;
-
-        public Form1()
+        public PauseMenu()
         {
             InitializeComponent();
-
-            StartMenu sm = new StartMenu();
-            this.Controls.Add(sm);
         }
     }
 }
