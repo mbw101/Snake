@@ -13,7 +13,7 @@ namespace Snake
 {
     public partial class GameScreen : UserControl
     {
-        // TODO: Create start and pause screens
+        // TODO: Work on pause screen
         SolidBrush sb = new SolidBrush(Color.White);
         Font textFont;
         List<SnakeComponent> snake = new List<SnakeComponent>();

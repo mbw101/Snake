@@ -25,6 +25,7 @@ namespace Snake
 
             GameScreen gs = new GameScreen();
             f.Controls.Add(gs);
+            gs.Focus();
         }
     }
 }
