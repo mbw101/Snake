@@ -25,13 +25,21 @@ namespace Snake
         const int PART_SIZE = 24;
         const int FOOD_SIZE = 16;
         public static int score = 0;
+        bool paused = false;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
 
         public GameScreen()
         {
             InitializeComponent();
 
-            OnStart();
+            if (paused)
+            {
+                paused = false;
+            }
+            else
+            {
+                OnStart();
+            }
         }
 
         public void OnStart()
@@ -285,6 +293,19 @@ namespace Snake
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            if (e.KeyCode == Keys.Escape && gameTimer.Enabled)
+            {
+                gameTimer.Enabled = false;
+                rightArrowDown = leftArrowDown = upArrowDown = downArrowDown = false;
+
+                Form f = this.FindForm();
+                f.Controls.Remove(this);
+
+                PauseScreen ps = new PauseScreen();
+                f.Controls.Add(ps);
+                paused = true;
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.Left:
