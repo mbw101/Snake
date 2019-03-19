@@ -20,26 +20,17 @@ namespace Snake
         Food f;
         Random random = new Random();
         const int SNAKE_SPEED = 24;
-        const int MAX_PARTS = 20;
         const int MARGIN = 3;
-        const int PART_SIZE = 24;
+        public const int PART_SIZE = 24;
         const int FOOD_SIZE = 16;
         public static int score = 0;
-        bool paused = false;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
 
         public GameScreen()
         {
             InitializeComponent();
 
-            if (paused)
-            {
-                paused = false;
-            }
-            else
-            {
-                OnStart();
-            }
+            OnStart();
         }
 
         public void OnStart()
@@ -52,45 +43,7 @@ namespace Snake
 
             // make snake parts
             SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc);
-            /*SnakeComponent sc2 = new SnakeComponent(sc.rect.X - sc.rect.Width, sc.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc2);
-            SnakeComponent sc3 = new SnakeComponent(sc2.rect.X - sc2.rect.Width, sc2.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc3);
-            SnakeComponent sc4 = new SnakeComponent(sc3.rect.X - sc3.rect.Width, sc3.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc4);
-            SnakeComponent sc5 = new SnakeComponent(sc4.rect.X - sc4.rect.Width, sc4.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc5);
-            SnakeComponent sc6 = new SnakeComponent(sc5.rect.X - sc5.rect.Width, sc5.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc6);
-            SnakeComponent sc7 = new SnakeComponent(sc6.rect.X - sc6.rect.Width, sc6.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc7);
-            SnakeComponent sc8 = new SnakeComponent(sc7.rect.X - sc7.rect.Width, sc7.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc8);
-            SnakeComponent sc9 = new SnakeComponent(sc8.rect.X - sc8.rect.Width, sc8.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc9);
-            SnakeComponent sc10 = new SnakeComponent(sc9.rect.X - sc9.rect.Width, sc9.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc10);
-            SnakeComponent sc11 = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc11);
-            SnakeComponent sc12 = new SnakeComponent(sc.rect.X - sc.rect.Width, sc.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc12);
-            SnakeComponent sc13 = new SnakeComponent(sc2.rect.X - sc2.rect.Width, sc2.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc13);
-            SnakeComponent sc14 = new SnakeComponent(sc3.rect.X - sc3.rect.Width, sc3.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc14);
-            SnakeComponent sc15 = new SnakeComponent(sc4.rect.X - sc4.rect.Width, sc4.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc15);
-            SnakeComponent sc16 = new SnakeComponent(sc5.rect.X - sc5.rect.Width, sc5.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc16);
-            SnakeComponent sc17 = new SnakeComponent(sc6.rect.X - sc6.rect.Width, sc6.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc17);
-            SnakeComponent sc18 = new SnakeComponent(sc7.rect.X - sc7.rect.Width, sc7.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc18);
-            SnakeComponent sc19 = new SnakeComponent(sc8.rect.X - sc8.rect.Width, sc8.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc19);
-            SnakeComponent sc20 = new SnakeComponent(sc9.rect.X - sc9.rect.Width, sc9.rect.Y, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc20); */
+            snake.Add(sc);          
 
             // make the first food
             makeFood();
@@ -148,7 +101,7 @@ namespace Snake
             {
                 while (s.Collision(f))
                 {
-                    f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE);
+                    f = new Food(random.Next(5, 769), random.Next(5, 546), FOOD_SIZE);
                 }
             }              
         }
@@ -298,12 +251,16 @@ namespace Snake
                 gameTimer.Enabled = false;
                 rightArrowDown = leftArrowDown = upArrowDown = downArrowDown = false;
 
-                Form f = this.FindForm();
-                f.Controls.Remove(this);
+                DialogResult result = PauseForm.Show();
 
-                PauseScreen ps = new PauseScreen();
-                f.Controls.Add(ps);
-                paused = true;
+                if (result == DialogResult.Cancel)
+                {
+                    gameTimer.Enabled = true;
+                }
+                else if (result == DialogResult.Abort)
+                {
+                    Form1.ChangeScreen(this, "MenuScreen");
+                }
             }
 
             switch (e.KeyCode)

@@ -25,12 +25,12 @@ namespace Snake
         // collision with the form
         public bool Collision(Form f)
         {
-            if (rect.X < 0 || rect.X > f.Width - (rect.Width / 2))
+            if (rect.X <= -12 || rect.X > f.Width - (rect.Width / 2))
             {
                 return true;
             }
 
-            if (rect.Y < 0 || rect.Y > f.Height - (rect.Height / 2))
+            if (rect.Y <= -12 || rect.Y > f.Height - (rect.Height / 2))
             {
                 return true;
             }
@@ -49,7 +49,7 @@ namespace Snake
             return false;
         }
 
-        // TODO: Collision with a snake body part with the head
+        // Collision with a snake body part with the head
         public bool Collision(SnakeComponent sc)
         {
             if (rect.IntersectsWith(sc.rect))

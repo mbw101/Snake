@@ -37,6 +37,7 @@
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Snake";
             this.ResumeLayout(false);
 
