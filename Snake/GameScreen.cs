@@ -13,17 +13,16 @@ namespace Snake
 {
     public partial class GameScreen : UserControl
     {
-        // TODO: Work on pause screen
         SolidBrush sb = new SolidBrush(Color.White);
         Font textFont;
         List<SnakeComponent> snake = new List<SnakeComponent>();
         Food f;
         Random random = new Random();
-        const int SNAKE_SPEED = 24;
+        const int SNAKE_SPEED = 20; //24
         const int MARGIN = 3;
-        public const int PART_SIZE = 24;
+        public const int PART_SIZE = 20;
         const int FOOD_SIZE = 16;
-        public static int score = 0;
+        public static int length = 1;
         bool leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
 
         public GameScreen()
@@ -35,8 +34,8 @@ namespace Snake
 
         public void OnStart()
         {
-            // reset score
-            score = 0;
+            // reset length
+            length = 1;
 
             // create text graphics
             textFont = new Font("Verdana", 14, FontStyle.Regular);
@@ -94,14 +93,14 @@ namespace Snake
 
         public void makeFood()
         {
-            f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE);
+            f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
 
             // TODO: Make food not generate on top of any snake body parts
             foreach (SnakeComponent s in snake)
             {
-                while (s.Collision(f))
+                if (s.Collision(f))
                 {
-                    f = new Food(random.Next(5, 769), random.Next(5, 546), FOOD_SIZE);
+                    f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
                 }
             }              
         }
@@ -166,8 +165,8 @@ namespace Snake
             // when the head collides with food
             if (snake[0].Collision(f))
             {
-                // increase score
-                score++;
+                // increase length of snake
+                length += 5;
 
                 // make new food
                 makeFood();
@@ -176,10 +175,10 @@ namespace Snake
                 int ySpeed = snake[snake.Count() - 1].ySpeed;
                 SnakeComponent sc;
 
-
+                // add 5 body parts
                 if (xSpeed == SNAKE_SPEED)
                 {
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
@@ -187,7 +186,7 @@ namespace Snake
                 }
                 else if (xSpeed == -SNAKE_SPEED)
                 {
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
@@ -195,7 +194,7 @@ namespace Snake
                 }
                 else if (ySpeed == SNAKE_SPEED)
                 {
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
@@ -203,7 +202,7 @@ namespace Snake
                 }
                 else if (ySpeed == -SNAKE_SPEED)
                 {
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
@@ -211,7 +210,7 @@ namespace Snake
                 }
             }
 
-            // TODO: Check head collision with the rest of the snake body
+            // Check head collision with the rest of the snake body
             // skip second body part
             if (snake.Count() > 2)
             {
@@ -230,18 +229,17 @@ namespace Snake
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
-        {
+        { 
+            sb.Color = f.colour;
             e.Graphics.FillEllipse(sb, f.rect);
 
+            sb.Color = Color.White;
             foreach (SnakeComponent sc in snake)
             {
                 e.Graphics.FillRectangle(sb, sc.rect);
-
-                /*Pen pen = new Pen(Color.Red);
-                e.Graphics.DrawRectangle(pen, sc.rect); */
             }
 
-            e.Graphics.DrawString("Score: " + score, textFont, sb, 25, 25);
+            e.Graphics.DrawString("Length: " + length, textFont, sb, 25, 25);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

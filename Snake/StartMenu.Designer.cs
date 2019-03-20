@@ -31,6 +31,7 @@
             this.playButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
             this.titleLabel = new System.Windows.Forms.Label();
+            this.instructionsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // playButton
@@ -68,11 +69,22 @@
             this.titleLabel.TabIndex = 2;
             this.titleLabel.Text = "Snake";
             // 
+            // instructionsLabel
+            // 
+            this.instructionsLabel.AutoSize = true;
+            this.instructionsLabel.Font = new System.Drawing.Font("Lucida Sans Typewriter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.instructionsLabel.Location = new System.Drawing.Point(55, 439);
+            this.instructionsLabel.Name = "instructionsLabel";
+            this.instructionsLabel.Size = new System.Drawing.Size(681, 22);
+            this.instructionsLabel.TabIndex = 3;
+            this.instructionsLabel.Text = "Use arrow keys or WASD to move snake. Eat food to gain parts.";
+            // 
             // StartMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Controls.Add(this.instructionsLabel);
             this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
@@ -88,5 +100,6 @@
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Label instructionsLabel;
     }
 }

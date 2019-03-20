@@ -15,7 +15,7 @@ namespace Snake
         public LoseScreen()
         {
             InitializeComponent();
-            scoreLabel.Text += GameScreen.score;
+            lengthLabel.Text += GameScreen.length;
         }
 
         private void playButton_Click(object sender, EventArgs e)

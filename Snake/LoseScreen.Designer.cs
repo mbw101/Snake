@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.titleLabel = new System.Windows.Forms.Label();
-            this.scoreLabel = new System.Windows.Forms.Label();
+            this.lengthLabel = new System.Windows.Forms.Label();
             this.playButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -44,16 +44,16 @@
             this.titleLabel.TabIndex = 0;
             this.titleLabel.Text = "You lose!";
             // 
-            // scoreLabel
+            // lengthLabel
             // 
-            this.scoreLabel.AutoSize = true;
-            this.scoreLabel.Font = new System.Drawing.Font("Lucida Sans", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scoreLabel.ForeColor = System.Drawing.Color.White;
-            this.scoreLabel.Location = new System.Drawing.Point(324, 274);
-            this.scoreLabel.Name = "scoreLabel";
-            this.scoreLabel.Size = new System.Drawing.Size(132, 39);
-            this.scoreLabel.TabIndex = 1;
-            this.scoreLabel.Text = "Score: ";
+            this.lengthLabel.AutoSize = true;
+            this.lengthLabel.Font = new System.Drawing.Font("Lucida Sans", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lengthLabel.ForeColor = System.Drawing.Color.White;
+            this.lengthLabel.Location = new System.Drawing.Point(324, 274);
+            this.lengthLabel.Name = "lengthLabel";
+            this.lengthLabel.Size = new System.Drawing.Size(144, 39);
+            this.lengthLabel.TabIndex = 1;
+            this.lengthLabel.Text = "Length:";
             // 
             // playButton
             // 
@@ -77,7 +77,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.playButton);
-            this.Controls.Add(this.scoreLabel);
+            this.Controls.Add(this.lengthLabel);
             this.Controls.Add(this.titleLabel);
             this.Name = "LoseScreen";
             this.Size = new System.Drawing.Size(800, 600);
@@ -89,7 +89,7 @@
         #endregion
 
         private System.Windows.Forms.Label titleLabel;
-        private System.Windows.Forms.Label scoreLabel;
+        private System.Windows.Forms.Label lengthLabel;
         private System.Windows.Forms.Button playButton;
     }
 }
