@@ -72,10 +72,10 @@
             // instructionsLabel
             // 
             this.instructionsLabel.AutoSize = true;
-            this.instructionsLabel.Font = new System.Drawing.Font("Lucida Sans Typewriter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.instructionsLabel.Location = new System.Drawing.Point(55, 439);
+            this.instructionsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.instructionsLabel.Location = new System.Drawing.Point(151, 441);
             this.instructionsLabel.Name = "instructionsLabel";
-            this.instructionsLabel.Size = new System.Drawing.Size(681, 22);
+            this.instructionsLabel.Size = new System.Drawing.Size(538, 24);
             this.instructionsLabel.TabIndex = 3;
             this.instructionsLabel.Text = "Use arrow keys or WASD to move snake. Eat food to gain parts.";
             // 

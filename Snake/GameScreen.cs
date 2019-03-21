@@ -43,10 +43,6 @@ namespace Snake
             // make snake parts
             SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
             snake.Add(sc);
-            SnakeComponent sc2 = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc2);
-            SnakeComponent sc3 = new SnakeComponent(65, 65, PART_SIZE, -SNAKE_SPEED, 0);
-            snake.Add(sc3);
 
             // make the first food
             makeFood();
@@ -64,6 +60,8 @@ namespace Snake
 
             LoseScreen ls = new LoseScreen();
             f.Controls.Add(ls);
+            
+            // TODO: Focus on the play again button
         }
 
         public void moveSnake()
@@ -99,12 +97,15 @@ namespace Snake
         {
             f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
 
-            // Make food not generate on top of any snake body parts
+            // check to see if the food is inside the body
             foreach (SnakeComponent s in snake)
             {
                 if (s.Collision(f))
                 {
-                    f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
+                    // TODO: Try calling this method recursively until it passes and the food
+                    // isn't in the body
+                    //f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
+                    makeFood();
                 }
             }
         }
@@ -115,6 +116,7 @@ namespace Snake
 
             #region movement controls
 
+            // go through each snake component
             foreach (SnakeComponent sc in snake)
             {
                 // Check to make sure that you can't move into the snake (ie can't move down when snake is moving up)
@@ -175,52 +177,61 @@ namespace Snake
                 // make new food
                 makeFood();
 
+                // create a temp part 
                 int xSpeed = snake[snake.Count() - 1].xSpeed;
                 int ySpeed = snake[snake.Count() - 1].ySpeed;
                 SnakeComponent sc;
-                // TODO: The added body parts are going opposite to the head not the tail (fix) (the xSpeed are all the same for some reason)
                 string direction = "";
 
-                if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
-                    && snake[snake.Count() - 1].rect.X > snake[snake.Count() - 2].rect.X)
+                // check last body part if the length is more than one
+                if (snake.Count() > 1)
                 {
-                    direction = "left";
-                }
-                else if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
-                    && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
-                {
-                    direction = "right";
-                }
-                else if (snake[snake.Count() - 1].rect.Y < snake[snake.Count() - 2].rect.Y
-                    && snake[snake.Count() - 1].rect.X == snake[snake.Count() - 2].rect.X)
-                {
-                    direction = "down";
-                }
-                else if (snake[snake.Count() - 1].rect.Y > snake[snake.Count() - 2].rect.Y
-                    && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
-                {
-                    direction = "up";
+                    // last body part logic to 
+                    // make sure that the parts that are added are in the right direction
+                    // i.e (When the tail is going left, the new parts go to the right of the tail)
+                    if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
+                        && snake[snake.Count() - 1].rect.X > snake[snake.Count() - 2].rect.X)
+                    {
+                        direction = "left";
+                    }
+                    else if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
+                        && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
+                    {
+                        direction = "right";
+                    }
+                    else if (snake[snake.Count() - 1].rect.Y < snake[snake.Count() - 2].rect.Y
+                        && snake[snake.Count() - 1].rect.X == snake[snake.Count() - 2].rect.X)
+                    {
+                        direction = "down";
+                    }
+                    else if (snake[snake.Count() - 1].rect.Y > snake[snake.Count() - 2].rect.Y
+                        && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
+                    {
+                        direction = "up";
+                    }
                 }
 
                 // add 5 body parts
                 for (int i = 0; i < 5; i++)
                 {
-                    if (direction == "left")
+                    // add each part in the right direction of the tail
+                    // or head if the length is 1
+                    if (direction == "left" || (xSpeed == -SNAKE_SPEED && snake.Count < 5))
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
-                    else if (direction == "right")
+                    else if (direction == "right" || (xSpeed == SNAKE_SPEED && snake.Count < 5))
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
-                    else if (direction == "up")
+                    else if (direction == "up" || (ySpeed == -SNAKE_SPEED && snake.Count < 6))
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
-                    else if (direction == "down")
+                    else if (direction == "down" || (ySpeed == SNAKE_SPEED && snake.Count < 6))
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
@@ -248,9 +259,11 @@ namespace Snake
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
+            // set up colour for food and draw it
             sb.Color = f.colour;
             e.Graphics.FillEllipse(sb, f.rect);
 
+            // draw each snake part with white
             sb.Color = Color.White;
             foreach (SnakeComponent sc in snake)
             {
@@ -262,6 +275,7 @@ namespace Snake
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            // pause menu code
             if (e.KeyCode == Keys.Escape && gameTimer.Enabled)
             {
                 gameTimer.Enabled = false;
@@ -279,6 +293,7 @@ namespace Snake
                 }
             }
 
+            // movement keys
             switch (e.KeyCode)
             {
                 case Keys.Left:
@@ -305,6 +320,7 @@ namespace Snake
 
         private void GameScreen_KeyUp(object sender, KeyEventArgs e)
         {
+            // key release 
             switch (e.KeyCode)
             {
                 case Keys.Left:
