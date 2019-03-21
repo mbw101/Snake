@@ -13,13 +13,16 @@ namespace Snake
     public partial class Form1 : Form
     {
         public static int score = 0;
+        public bool fullScreen = true;
 
         public Form1()
         {
             InitializeComponent();
 
+            Cursor.Hide();
+
             StartMenu sm = new StartMenu();
-            this.Controls.Add(sm);
+            this.Controls.Add(sm);     
         }
 
         /// <summary>

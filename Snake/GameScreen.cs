@@ -42,7 +42,11 @@ namespace Snake
 
             // make snake parts
             SnakeComponent sc = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
-            snake.Add(sc);          
+            snake.Add(sc);
+            SnakeComponent sc2 = new SnakeComponent(65, 65, PART_SIZE, SNAKE_SPEED, 0);
+            snake.Add(sc2);
+            SnakeComponent sc3 = new SnakeComponent(65, 65, PART_SIZE, -SNAKE_SPEED, 0);
+            snake.Add(sc3);
 
             // make the first food
             makeFood();
@@ -76,7 +80,7 @@ namespace Snake
             snake[0].Move();
 
             // start from the back and move up list
-            for (int i = snake.Count() - 1; i >0; i--)
+            for (int i = snake.Count() - 1; i > 0; i--)
             {
                 snake[i].rect.X = snake[i - 1].rect.X;
                 snake[i].rect.Y = snake[i - 1].rect.Y;
@@ -95,14 +99,14 @@ namespace Snake
         {
             f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
 
-            // TODO: Make food not generate on top of any snake body parts
+            // Make food not generate on top of any snake body parts
             foreach (SnakeComponent s in snake)
             {
                 if (s.Collision(f))
                 {
                     f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
                 }
-            }              
+            }
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -174,37 +178,51 @@ namespace Snake
                 int xSpeed = snake[snake.Count() - 1].xSpeed;
                 int ySpeed = snake[snake.Count() - 1].ySpeed;
                 SnakeComponent sc;
+                // TODO: The added body parts are going opposite to the head not the tail (fix) (the xSpeed are all the same for some reason)
+                string direction = "";
+
+                if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
+                    && snake[snake.Count() - 1].rect.X > snake[snake.Count() - 2].rect.X)
+                {
+                    direction = "left";
+                }
+                else if (snake[snake.Count() - 1].rect.Y == snake[snake.Count() - 2].rect.Y
+                    && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
+                {
+                    direction = "right";
+                }
+                else if (snake[snake.Count() - 1].rect.Y < snake[snake.Count() - 2].rect.Y
+                    && snake[snake.Count() - 1].rect.X == snake[snake.Count() - 2].rect.X)
+                {
+                    direction = "down";
+                }
+                else if (snake[snake.Count() - 1].rect.Y > snake[snake.Count() - 2].rect.Y
+                    && snake[snake.Count() - 1].rect.X < snake[snake.Count() - 2].rect.X)
+                {
+                    direction = "up";
+                }
 
                 // add 5 body parts
-                if (xSpeed == SNAKE_SPEED)
+                for (int i = 0; i < 5; i++)
                 {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
-                        snake.Add(sc);
-                    }
-                }
-                else if (xSpeed == -SNAKE_SPEED)
-                {
-                    for (int i = 0; i < 5; i++)
+                    if (direction == "left")
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X + PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
-                }
-                else if (ySpeed == SNAKE_SPEED)
-                {
-                    for (int i = 0; i < 5; i++)
+                    else if (direction == "right")
                     {
-                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X - PART_SIZE, snake[snake.Count() - 1].rect.Y, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
-                }
-                else if (ySpeed == -SNAKE_SPEED)
-                {
-                    for (int i = 0; i < 5; i++)
+                    else if (direction == "up")
                     {
                         sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y + PART_SIZE, PART_SIZE, xSpeed, ySpeed);
+                        snake.Add(sc);
+                    }
+                    else if (direction == "down")
+                    {
+                        sc = new SnakeComponent(snake[snake.Count() - 1].rect.X, snake[snake.Count() - 1].rect.Y - PART_SIZE, PART_SIZE, xSpeed, ySpeed);
                         snake.Add(sc);
                     }
                 }
@@ -229,7 +247,7 @@ namespace Snake
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
-        { 
+        {
             sb.Color = f.colour;
             e.Graphics.FillEllipse(sb, f.rect);
 
