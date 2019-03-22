@@ -62,8 +62,6 @@ namespace Snake
 
             LoseScreen ls = new LoseScreen();
             f.Controls.Add(ls);
-            
-            // TODO: Focus on the play again button
         }
 
         public void moveSnake()
@@ -104,9 +102,8 @@ namespace Snake
             {
                 if (s.Collision(f))
                 {
-                    // TODO: Try calling this method recursively until it passes and the food
-                    // isn't in the body
-                    //f = new Food(random.Next(0, 769), random.Next(0, 546), FOOD_SIZE, Color.Red);
+                    // Call this method again until food is not
+                    // inside body
                     makeFood();
                 }
             }
