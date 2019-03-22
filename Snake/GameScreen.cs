@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
+using System.Media;
 
 namespace Snake
 {
     public partial class GameScreen : UserControl
     {
         SolidBrush sb = new SolidBrush(Color.White);
+        SoundPlayer eat = new SoundPlayer(Properties.Resources.eat);
         Font textFont;
         List<SnakeComponent> snake = new List<SnakeComponent>();
         Food f;
@@ -173,6 +175,8 @@ namespace Snake
             {
                 // increase length of snake
                 length += 5;
+
+                eat.Play();
 
                 // make new food
                 makeFood();
