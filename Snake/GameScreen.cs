@@ -10,6 +10,10 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Media;
 
+/***
+ * Malcolm Wright
+ * 
+ */
 namespace Snake
 {
     public partial class GameScreen : UserControl

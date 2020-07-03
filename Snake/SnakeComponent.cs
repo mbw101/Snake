@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
+
+/***
+ * Malcolm Wright
+ * 
+ */
 namespace Snake
 {
     class SnakeComponent
